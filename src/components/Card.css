@@ -1,0 +1,9 @@
+.card {
+}
+
+.card img {
+  width: 100%;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}

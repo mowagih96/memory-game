@@ -1,25 +1,48 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import Card from './components/Card';
+
 import './App.css';
 
-function App() {
+const cardImages = [
+  { src: '/images/helmet-1.png' },
+  { src: '/images/ring-1.png' },
+  { src: '/images/scroll-1.png' },
+  { src: '/images/shield-1.png' },
+  { src: '/images/sword-1.png' },
+];
+
+const App = () => {
+  const [cards, setCards] = useState([]);
+  const [turns, setTurns] = useState(null);
+
+  const shuffleCards = () => {
+    // TODO:
+    // 1. Use images API instead
+    // 2. Use UUID instead
+
+    const seed = Math.random() - 0.5;
+    const shuffledCards = [...cardImages, ...cardImages]
+      .sort(() => (seed < 0 ? -1 : seed > 0 ? 1 : 0))
+      .map((card) => ({ ...card, id: Math.random() }));
+
+    setCards(shuffledCards);
+    setTurns(0);
+
+    console.log(shuffledCards);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Memory Game</h1>
+      <button onClick={shuffleCards}>New Game</button>
+
+      <div className="card-grid">
+        {cards.map(({ id, src }) => (
+          <Card key={id} imageSource={src} />
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
