@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from './components/Card';
 
 import './App.css';
@@ -14,6 +14,8 @@ const cardImages = [
 const App = () => {
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(null);
+  const [choiceOne, setChoiceOne] = useState(null);
+  const [choiceTwo, setChoiceTwo] = useState(null);
 
   const shuffleCards = () => {
     // TODO:
@@ -31,14 +33,35 @@ const App = () => {
     console.log(shuffledCards);
   };
 
+  const handleChoice = (card) =>
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
+
+  const resetTurn = () => {
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setTurns((prevTurn) => prevTurn + 1);
+  };
+
+  useEffect(() => {
+    if (choiceTwo) {
+      if (choiceOne.src === choiceTwo.src && choiceOne.id !== choiceTwo.id) {
+        console.log('MATCH');
+      } else {
+        console.log('DOESN"T MATCH');
+      }
+
+      resetTurn();
+    }
+  }, [choiceOne, choiceTwo]);
+
   return (
     <div className="app">
       <h1>Memory Game</h1>
       <button onClick={shuffleCards}>New Game</button>
 
       <div className="card-grid">
-        {cards.map(({ id, src }) => (
-          <Card key={id} imageSource={src} />
+        {cards.map((card) => (
+          <Card key={card.id} card={card} handleChoice={handleChoice} />
         ))}
       </div>
     </div>
