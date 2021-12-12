@@ -4,11 +4,11 @@ import Card from './components/Card';
 import './App.css';
 
 const cardImages = [
-  { src: '/images/helmet-1.png' },
-  { src: '/images/ring-1.png' },
-  { src: '/images/scroll-1.png' },
-  { src: '/images/shield-1.png' },
-  { src: '/images/sword-1.png' },
+  { src: '/images/helmet-1.png', matched: false },
+  { src: '/images/ring-1.png', matched: false },
+  { src: '/images/scroll-1.png', matched: false },
+  { src: '/images/shield-1.png', matched: false },
+  { src: '/images/sword-1.png', matched: false },
 ];
 
 const App = () => {
@@ -43,14 +43,20 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (choiceTwo) {
+    if (choiceOne && choiceTwo) {
       if (choiceOne.src === choiceTwo.src && choiceOne.id !== choiceTwo.id) {
         console.log('MATCH');
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            card.src === choiceOne.src ? { ...card, matched: true } : card
+          )
+        );
+
+        resetTurn();
       } else {
         console.log('DOESN"T MATCH');
+        setTimeout(() => resetTurn(), 2000);
       }
-
-      resetTurn();
     }
   }, [choiceOne, choiceTwo]);
 
@@ -61,7 +67,12 @@ const App = () => {
 
       <div className="card-grid">
         {cards.map((card) => (
-          <Card key={card.id} card={card} handleChoice={handleChoice} />
+          <Card
+            key={card.id}
+            card={card}
+            flipped={card === choiceOne || card === choiceTwo || card.matched}
+            handleChoice={handleChoice}
+          />
         ))}
       </div>
     </div>

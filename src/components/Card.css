@@ -1,4 +1,5 @@
 .card {
+  position: relative;
 }
 
 .card img {
@@ -6,4 +7,27 @@
   border: 2px solid #fff;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.card .front {
+  position: absolute;
+  transform: rotateY(90deg); /* hide front card */
+  transition: transform 0.2s ease-in;
+}
+
+/* back -> front: front flipped card should wait the back flipped card to finish flipping animation */
+.card .flipped .front {
+  transform: rotateY(0deg); /* show front card when flipped */
+  transition: transform 0.2s ease-in 0.2s; /* start the front card flipping animation after 0.2 secons
+                                              so that the back card can finish its flipping animation */
+}
+
+.card .flipped .back {
+  transform: rotateY(90deg); /* hide back card when flipped */
+  transition: transform 0.2s ease-in; /* start the back card flipping animation immediately */
+}
+
+/* front -> back: back should wait */
+.card .back {
+  transition: transform 0.2s ease-in 0.2s;
 }
