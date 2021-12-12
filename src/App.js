@@ -1,25 +1,26 @@
 import { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Card from './components/Card';
 
 import './App.css';
 
 const cardImages = [
-  { src: '/images/helmet-1.png', matched: false, disabled: false },
-  { src: '/images/ring-1.png', matched: false, disabled: false },
-  { src: '/images/scroll-1.png', matched: false, disabled: false },
-  { src: '/images/shield-1.png', matched: false, disabled: false },
-  { src: '/images/sword-1.png', matched: false, disabled: false },
+  { src: '/images/helmet-1.png', matched: false },
+  { src: '/images/ring-1.png', matched: false },
+  { src: '/images/scroll-1.png', matched: false },
+  { src: '/images/shield-1.png', matched: false },
+  { src: '/images/sword-1.png', matched: false },
 ];
 
 const App = () => {
   const [cards, setCards] = useState([]);
-  const [turns, setTurns] = useState(null);
+  const [turns, setTurns] = useState(0);
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [canFlip, setCanFlip] = useState(true);
 
   const initGame = () => {
-    resetTurn();
+    resetTurn(true);
     shuffleCards();
   };
 
@@ -31,10 +32,9 @@ const App = () => {
     const seed = Math.random() - 0.5;
     const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => (seed < 0 ? -1 : seed > 0 ? 1 : 0))
-      .map((card) => ({ ...card, id: Math.random() }));
+      .map((card) => ({ ...card, id: uuidv4() }));
 
     setCards(shuffledCards);
-    setTurns(0);
 
     console.log(shuffledCards);
   };
@@ -44,10 +44,10 @@ const App = () => {
       ? setChoiceTwo(card)
       : setChoiceOne(card);
 
-  const resetTurn = () => {
+  const resetTurn = (newGame = false) => {
     setChoiceOne(null);
     setChoiceTwo(null);
-    setTurns((prevTurn) => prevTurn + 1);
+    setTurns(newGame ? 0 : (prevTurn) => prevTurn + 1);
     setCanFlip(true);
   };
 
@@ -73,7 +73,13 @@ const App = () => {
   return (
     <div className="app">
       <h1>Memory Game</h1>
-      <button onClick={initGame}>New Game</button>
+      <button
+        style={{ cursor: !canFlip ? 'not-allowed' : 'pointer' }}
+        onClick={initGame}
+        disabled={!canFlip}
+      >
+        New Game
+      </button>
 
       <div className="card-grid">
         {cards.map((card) => (
