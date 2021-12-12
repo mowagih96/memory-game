@@ -1,9 +1,7 @@
 import './Card.css';
 
-const Card = ({ card, flipped, handleChoice }) => {
-  const handleClick = () => {
-    handleChoice(card);
-  };
+const Card = ({ card, flipped, enabled, handleChoice }) => {
+  const handleClick = () => enabled && handleChoice(card);
 
   return (
     <div className="card" onClick={handleClick}>
